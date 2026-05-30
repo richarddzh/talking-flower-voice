@@ -75,6 +75,7 @@ Set-ExecutionPolicy -Scope Process Bypass
 - [训练流程](docs\TRAINING.md)
 - [训练与推理原理简述](docs\PRINCIPLES.md)
 - [训练和推理依赖差异](docs\DEPENDENCIES.md)
+- [训练/推理资产说明](docs\ASSETS.md)
 - [第三方来源与本仓库修改方式](docs\THIRD_PARTY_SOURCES.md)
 
 ## 数据和产物目录
@@ -88,6 +89,12 @@ Set-ExecutionPolicy -Scope Process Bypass
 | `outputs` | 推理输出、ASR 测试输出、测速报告 |
 
 这些目录是训练过程的重要资产。清理仓库时可以删除缓存、临时下载和 Python 编译缓存，但不要删除这些目录中的原始数据、中间训练步骤、日志、模型和测试结果。
+
+如果从 GitHub 重新 clone，需要先恢复本地训练/推理资产。详见 [训练/推理资产说明](docs\ASSETS.md)，并可用以下命令检查：
+
+```powershell
+.\scripts\check-assets.ps1
+```
 
 ## 第三方代码来源
 
