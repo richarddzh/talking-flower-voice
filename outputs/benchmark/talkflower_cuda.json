@@ -1,7 +1,7 @@
 {
   "device": "cuda",
   "is_half": false,
-  "text": "你好，我是闲聊花花。今天也一起开心地冒险吧。",
+  "text": "\u4f60\u597d\uff0c\u6211\u662f\u95f2\u804a\u82b1\u82b1\u3002\u4eca\u5929\u4e5f\u4e00\u8d77\u5f00\u5fc3\u5730\u5192\u9669\u5427\u3002",
   "runs": [
     {
       "run": 1,
