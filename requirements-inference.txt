@@ -1,0 +1,29 @@
+--no-binary=opencc
+numpy<2.0
+scipy
+librosa==0.10.2
+numba
+ffmpeg-python
+tqdm
+cn2an
+pypinyin
+g2p_en
+torchaudio
+soundfile
+sentencepiece
+transformers>=4.43,<=4.50
+peft<0.18.0
+chardet
+PyYAML
+jieba_fast
+jieba
+split-lang
+fast_langdetect>=0.3.1
+wordsegment
+rotary_embedding_torch
+opencc
+onnxruntime; platform_machine == "aarch64" or platform_machine == "arm64"
+onnxruntime-gpu; platform_machine == "x86_64" or platform_machine == "AMD64"
+pytorch-lightning>=2.4
+torchmetrics<=1.5
+huggingface_hub

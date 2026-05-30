@@ -74,6 +74,7 @@ Set-ExecutionPolicy -Scope Process Bypass
 - [使用说明](docs\USAGE.md)
 - [训练流程](docs\TRAINING.md)
 - [训练与推理原理简述](docs\PRINCIPLES.md)
+- [训练和推理依赖差异](docs\DEPENDENCIES.md)
 - [第三方来源与本仓库修改方式](docs\THIRD_PARTY_SOURCES.md)
 
 ## 数据和产物目录
