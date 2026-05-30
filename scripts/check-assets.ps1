@@ -13,8 +13,8 @@ $requiredInference = @(
     "GPT_SoVITS\pretrained_models\chinese-roberta-wwm-ext-large\pytorch_model.bin",
     "GPT_SoVITS\pretrained_models\chinese-hubert-base\config.json",
     "GPT_SoVITS\pretrained_models\chinese-hubert-base\pytorch_model.bin",
-    "GPT_SoVITS\text\G2PWModel\config.json",
-    "GPT_SoVITS\text\G2PWModel\pytorch_model.bin",
+    "GPT_SoVITS\text\G2PWModel\g2pW.onnx",
+    "GPT_SoVITS\text\G2PWModel\POLYPHONIC_CHARS.txt",
     "data\smbw_zh_train\audio\TWzh__TalkFlower_Placement_Stream__Course_051_00.mp3"
 )
 
@@ -24,7 +24,8 @@ $requiredTraining = @(
     "logs\talkflower_zh_v2pp_strict\6-name2semantic.tsv",
     "GPT_SoVITS\pretrained_models\s1v3.ckpt",
     "GPT_SoVITS\pretrained_models\v2Pro\s2Gv2ProPlus.pth",
-    "GPT_SoVITS\pretrained_models\v2Pro\s2Dv2ProPlus.pth"
+    "GPT_SoVITS\pretrained_models\v2Pro\s2Dv2ProPlus.pth",
+    "tools\asr\models\speech_paraformer-large_asr_nat-zh-cn-16k-common-vocab8404-pytorch\model.pt"
 )
 
 $paths = @()

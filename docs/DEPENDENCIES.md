@@ -13,7 +13,7 @@
 | GPT-SoVITS 原始 base GPT/SoVITS 权重 | 不需要 | 需要 | 已有微调权重后，推理不再需要 `s1v3.ckpt`、`s2Gv2ProPlus.pth`、`s2Dv2ProPlus.pth` 这类训练初始化权重 |
 | BERT / RoBERTa 中文模型 | 需要 | 需要 | 用于中文文本 BERT 特征，路径：`GPT_SoVITS\pretrained_models\chinese-roberta-wwm-ext-large` |
 | CNHuBERT 模型 | 需要 | 需要 | 推理时也要从参考音频提取 prompt semantic，路径：`GPT_SoVITS\pretrained_models\chinese-hubert-base` |
-| G2PWModel | 需要 | 需要 | 中文多音字/拼音前端需要，路径：`GPT_SoVITS\text\G2PWModel` |
+| G2PWModel | 需要 | 需要 | 中文多音字/拼音前端需要，路径：`GPT_SoVITS\text\G2PWModel`；当前运行使用其中的 `g2pW.onnx` |
 | Chinese ASR / FunASR 模型 | 不需要 | 数据准备需要 | 只在从原始音频自动生成标注文本时使用 |
 | ModelScope CLI / modelscope 包 | 不需要 | 下载模型、ASR/去噪等工具需要 | 推理部署时如果模型文件已就绪，可以不安装 |
 | faster-whisper | 不需要 | 可选 ASR 需要 | 当前中文数据准备默认用 FunASR，不是推理依赖 |

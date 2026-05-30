@@ -45,6 +45,8 @@ data\smbw_zh_train\audio\TWzh__TalkFlower_Placement_Stream__Course_051_00.mp3
 GPT_SoVITS\pretrained_models\chinese-roberta-wwm-ext-large
 GPT_SoVITS\pretrained_models\chinese-hubert-base
 GPT_SoVITS\text\G2PWModel
+  - g2pW.onnx
+  - POLYPHONIC_CHARS.txt
 ```
 
 ### 4. 检查资产是否齐全
@@ -78,6 +80,7 @@ GPT_SoVITS\text\G2PWModel
 *.ckpt
 *.pth
 *.bin
+*.onnx
 *.wav
 *.mp3
 ```
