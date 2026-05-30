@@ -10,6 +10,7 @@ logs
 SoVITS_weights*/
 GPT_weights*/
 TEMP
+modelscope_package/
 weight.json
 ffmpeg*
 ffprobe*

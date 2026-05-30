@@ -76,6 +76,7 @@ Set-ExecutionPolicy -Scope Process Bypass
 - [训练与推理原理简述](docs\PRINCIPLES.md)
 - [训练和推理依赖差异](docs\DEPENDENCIES.md)
 - [训练/推理资产说明](docs\ASSETS.md)
+- [上传到 ModelScope](docs\MODELSCOPE.md)
 - [第三方来源与本仓库修改方式](docs\THIRD_PARTY_SOURCES.md)
 
 ## 数据和产物目录
