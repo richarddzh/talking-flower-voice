@@ -1,0 +1,31 @@
+{
+  "device": "cuda",
+  "is_half": false,
+  "text": "你好，我是闲聊花花。今天也一起开心地冒险吧。",
+  "runs": [
+    {
+      "run": 1,
+      "elapsed_seconds": 2.7472249000002193,
+      "audio_seconds": 5.12,
+      "rtf": 0.5365673632812928
+    },
+    {
+      "run": 2,
+      "elapsed_seconds": 2.7061555999998745,
+      "audio_seconds": 5.12,
+      "rtf": 0.5285460156249755
+    },
+    {
+      "run": 3,
+      "elapsed_seconds": 2.6969915999998193,
+      "audio_seconds": 5.12,
+      "rtf": 0.5267561718749647
+    }
+  ],
+  "average_elapsed_seconds": 2.716790699999971,
+  "average_audio_seconds": 5.12,
+  "average_rtf": 0.5306231835937443,
+  "torch": "2.10.0+cu128",
+  "cuda_available": true,
+  "cuda_device": "NVIDIA GeForce RTX 4070"
+}
