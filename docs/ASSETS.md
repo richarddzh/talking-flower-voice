@@ -7,6 +7,12 @@
 
 第二类资产包含任天堂游戏角色语音及其衍生训练产物。它们可以在本地保留用于复现实验，但不适合直接提交到准备 push 的 GitHub 仓库公开分发。
 
+当前已手动上传训练后的模型文件和原始训练数据（mp3 zip）到 ModelScope：
+
+```text
+https://www.modelscope.cn/models/richarddzh/talking-flower-voice
+```
+
 ## clone 后如何恢复到可运行状态
 
 ### 1. 安装环境

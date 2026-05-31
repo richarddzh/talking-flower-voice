@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>从 v1 到 v2ProPlus clean 再到 v2pp strict：闲聊花花中文 TTS 训练实录</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #fbfaf7;
+      --fg: #222;
+      --muted: #646464;
+      --card: #fff;
+      --line: #e8e1d6;
+      --accent: #b2582f;
+      --accent-soft: #fff2e9;
+      --code: #f5efe7;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #171513;
+        --fg: #eee9e3;
+        --muted: #bdb3a8;
+        --card: #211e1a;
+        --line: #3a332c;
+        --accent: #ffb078;
+        --accent-soft: #2d2119;
+        --code: #2a2520;
+      }
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      line-height: 1.75;
+    }
+
+    main {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 48px 24px 72px;
+    }
+
+    header {
+      padding: 34px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: linear-gradient(135deg, var(--accent-soft), var(--card));
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.06);
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.15;
+      letter-spacing: -0.04em;
+    }
+
+    h2 {
+      margin: 52px 0 18px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--line);
+      font-size: 1.55rem;
+    }
+
+    h3 {
+      margin: 30px 0 12px;
+      font-size: 1.16rem;
+    }
+
+    p {
+      margin: 14px 0;
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    .lead {
+      color: var(--muted);
+      font-size: 1.12rem;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 12px;
+      background: var(--card);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .note {
+      border-left: 4px solid var(--accent);
+      border-radius: 12px;
+      margin: 22px 0;
+      padding: 16px 18px;
+      background: var(--accent-soft);
+    }
+
+    .timeline {
+      display: grid;
+      gap: 18px;
+      margin: 24px 0;
+    }
+
+    .step {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 20px;
+      background: var(--card);
+    }
+
+    .step h3 {
+      margin-top: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--card);
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      padding: 11px 13px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--accent-soft);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    code,
+    pre {
+      font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    }
+
+    code {
+      border-radius: 5px;
+      padding: 0.12em 0.35em;
+      background: var(--code);
+    }
+
+    pre {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      background: var(--code);
+    }
+
+    ul,
+    ol {
+      padding-left: 1.4rem;
+    }
+
+    .footer {
+      margin-top: 56px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>从 v1 到 v2ProPlus clean 再到 v2pp strict：闲聊花花中文 TTS 训练实录</h1>
+      <p class="lead">
+        这是一篇基于本仓库和历史会话复盘整理的工程博客：我们如何把一包碎片化中文游戏语音，一步一步清理、训练、试听、排查问题，最后固化成可复用的 GPT-SoVITS v2ProPlus 训练和验证流程。
+      </p>
+      <div class="meta">
+        <span class="pill">项目：talking-flower-voice</span>
+        <span class="pill">模型：GPT-SoVITS v2ProPlus</span>
+        <span class="pill">最新版：talkflower_zh_v2pp_strict</span>
+        <span class="pill">平台：Windows + CUDA</span>
+      </div>
+    </header>
+
+    <section>
+      <h2>目标：不只是训练一个角色语音包</h2>
+      <p>
+        这个仓库的直接目标，是训练一个任天堂游戏角色“闲聊花花”的中文 TTS 语音包。更通用地看，它也是一次“如何用碎片化中文语音素材训练 TTS 模型”的工程实践：原始素材短、散、目录结构复杂，有些语音只有一两个字，有些文件更像音效或语气声，直接训练很容易得到“能说话但不像、发虚、破音、吐字不清”的模型。
+      </p>
+      <p>
+        因此，我们没有把训练当成一次性命令，而是拆成可审计、可回退、可复用的阶段：环境准备、数据抽取、自动标注、数据清理、格式化、SoVITS 训练、GPT 训练、固定参考音频验证、GPU/CPU 速度测试。
+      </p>
+      <div class="note">
+        本文只记录工程过程。复用到其他素材时，需要确认语音素材、模型权重和衍生产物具备相应使用或分发权限。
+      </div>
+    </section>
+
+    <section>
+      <h2>阶段 0：先把工程环境固定下来</h2>
+      <p>
+        一开始我们先把当前目录规范成 Git 仓库根目录，并把关键约束写进仓库：使用 PowerShell 脚本初始化虚拟环境，依赖安装走阿里云 PyPI mirror，PyTorch 使用 CUDA 12.8 版本，预训练模型优先从 ModelScope 下载，避免依赖 Hugging Face 的网络环境。
+      </p>
+      <pre><code>Set-ExecutionPolicy -Scope Process Bypass
+.\scripts\init-venv.ps1
+.\scripts\download-modelscope-model.ps1 -DownloadChineseAsr</code></pre>
+      <p>
+        这一步产出的不是模型，而是“可重复的训练工作台”：<code>.venv</code>、<code>requirements.txt</code>、<code>pyproject.toml</code>、<code>scripts\init-venv.ps1</code>、<code>scripts\download-modelscope-model.ps1</code>，以及后续训练所需的 GPT-SoVITS 预训练权重、中文 BERT、CNHuBERT、G2PW 和中文 ASR 模型。
+      </p>
+    </section>
+
+    <section>
+      <h2>阶段 1：从原始 mp3 zip 中只抽中文素材</h2>
+      <p>
+        原始数据来自 <code>smbw_voice.zip</code>。我们只需要中文语音，所以第一轮数据准备只抽取 <code>CNzh</code> 和 <code>TWzh</code> 两个目录，并把音频整理到训练目录中，再生成 GPT-SoVITS 使用的 list 格式：
+      </p>
+      <pre><code>wav_path|speaker|zh|text</code></pre>
+      <p>
+        当前仓库把这一步固化为：
+      </p>
+      <pre><code>.\scripts\stage-01-prepare-data.ps1 `
+  -ZipPath "C:\Users\richard\Downloads\smbw_voice.zip" `
+  -OutputRoot ".\data\smbw_zh_train"</code></pre>
+      <p>
+        早期探索里还遇到过中文文本在中间文件里显示乱码的问题，尤其是 <code>logs\talkflower_zh\2-name2text.txt</code>。这个问题提醒我们：训练流水线里不只要检查音频，还要检查文本编码、list 格式和 GPT-SoVITS 每个中间文件是否真的可读。
+      </p>
+    </section>
+
+    <section>
+      <h2>阶段 2：v1 初版模型先证明流程跑通</h2>
+      <p>
+        第一版实验名是 <code>talkflower_zh</code>。它使用较早的配置和初始清理方式训练，产出了：
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>类型</th>
+            <th>产物</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>SoVITS 权重</td>
+            <td><code>SoVITS_weights\talkflower_zh_e8_s1392.pth</code></td>
+          </tr>
+          <tr>
+            <td>GPT 权重</td>
+            <td><code>GPT_weights\talkflower_zh-e15.ckpt</code></td>
+          </tr>
+          <tr>
+            <td>测试音频</td>
+            <td><code>outputs\talkflower_zh_test_pcm16.wav</code></td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        这个版本的意义是证明端到端流程已经通了：能训练，能加载权重，能生成 32 kHz mono PCM16 wav，音频也不是静音。但试听和 ASR 检查都显示它还只是“可用的初版”：内容有偏差，声音不够像，后续还出现了破音、音调偏高、声音发虚、吐字不清晰等问题。
+      </p>
+      <p>
+        这一步的结论很重要：<strong>训练流程跑通，不等于模型质量达标。</strong> 对碎片化语音来说，数据质量和筛选策略往往比继续盲目加轮数更关键。
+      </p>
+    </section>
+
+    <section>
+      <h2>阶段 3：数据审计解释了“为什么不像”</h2>
+      <p>
+        对 v1 数据做审计后，我们发现数据集虽然有 744 条，但平均长度只有约 1.53 秒，其中 147 条小于 1 秒，468 条在 1 到 2 秒之间。大量样本是“啊”“哎”“对”一类短促语气词，能提供的稳定音色和韵律信息很少。
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>观察</th>
+            <th>影响</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>大量音频少于 2 秒</td>
+            <td>对音色、节奏、长句稳定性帮助有限</td>
+          </tr>
+          <tr>
+            <td>语气词和短碎片过多</td>
+            <td>容易学到破碎的发声方式，而不是完整说话风格</td>
+          </tr>
+          <tr>
+            <td>个别异常文本或非中文片段</td>
+            <td>影响文本到语义 token 的对齐</td>
+          </tr>
+          <tr>
+            <td>某些目录更像特殊音效或 VoiceOnly 素材</td>
+            <td>会拉偏音色、音高和清晰度</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        于是优化方向从“继续训练 v1”转为“先清洗数据，再换 v2ProPlus 训练”。这也是整个探索路线里最关键的转折点。
+      </p>
+    </section>
+
+    <section>
+      <h2>阶段 4：从 clean 到 strict，逐步收紧训练集</h2>
+      <p>
+        我们把清理策略分成两个层级，而不是一次性把所有东西删掉。这样做的好处是能保留对比空间：如果 strict 过于保守，还能回到 clean；如果 clean 仍混入噪声，则可以进一步收紧。
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>列表</th>
+            <th>规则</th>
+            <th>输出</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>smbw_zh.list</code></td>
+            <td>原始中文 list，来自 CNzh / TWzh 的自动整理和标注</td>
+            <td>作为审计和回溯基线</td>
+          </tr>
+          <tr>
+            <td><code>smbw_zh_clean_v2pp.list</code></td>
+            <td>丢弃中文字符少于 4 个的片段，并默认排除文件名含 <code>VoiceOnly</code> 的素材</td>
+            <td>用于 v2ProPlus clean 实验</td>
+          </tr>
+          <tr>
+            <td><code>smbw_zh_strict_v2pp.list</code></td>
+            <td>在 clean 基础上继续排除文件名含 <code>CommonBC</code> 的素材</td>
+            <td>用于最终 v2pp strict 实验</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        这些规则来自实际试听反馈：忽略 <code>TWzh\Voice\TalkFlower_VoiceOnly_Stream</code>，忽略 <code>CommonBC_*.mp3</code>，只保留文本超过 3 个字的片段。它们不是抽象的数据清洗教条，而是围绕“声音是否更像、更稳、更清楚”不断验证出来的。
+      </p>
+    </section>
+
+    <section>
+      <h2>阶段 5：切换到 v2ProPlus，并用同一句话对比试听</h2>
+      <p>
+        清洗后我们切换到 GPT-SoVITS v2ProPlus。v2ProPlus 训练会产生额外中间特征，例如说话人向量相关文件，也对应 <code>GPT_weights_v2ProPlus</code> 和 <code>SoVITS_weights_v2ProPlus</code> 两组权重目录。
+      </p>
+      <pre><code>.\scripts\stage-02-format-dataset.ps1 `
+  -ListPath ".\data\smbw_zh_train\metadata\smbw_zh_strict_v2pp.list" `
+  -AudioDir ".\data\smbw_zh_train\audio" `
+  -ExpName "talkflower_zh_v2pp_strict" `
+  -GpuNumbers "0"
+
+.\scripts\stage-03-train-sovits.ps1 `
+  -ExpName "talkflower_zh_v2pp_strict" `
+  -Version v2ProPlus `
+  -GpuNumbers "0" `
+  -Epochs 10
+
+.\scripts\stage-04-train-gpt.ps1 `
+  -ExpName "talkflower_zh_v2pp_strict" `
+  -Version v2ProPlus `
+  -GpuNumbers "0" `
+  -Epochs 18</code></pre>
+      <p>
+        在 clean 阶段，我们保留过一个试听效果比较好的样本：<code>outputs\talkflower_zh_v2pp_ref05100_conservative.wav</code>。它说明“数据清理 + v2ProPlus + 保守采样参数”的方向是对的。随后 strict 版本继续收紧素材，把它变成当前默认模型。
+      </p>
+    </section>
+
+    <section>
+      <h2>阶段 6：v2pp strict 成为当前默认版本</h2>
+      <p>
+        当前仓库默认的最新版模型是 <code>talkflower_zh_v2pp_strict</code>。默认推理配置使用：
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>项目</th>
+            <th>路径或内容</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>GPT 权重</td>
+            <td><code>GPT_weights_v2ProPlus\talkflower_zh_v2pp_strict-e18.ckpt</code></td>
+          </tr>
+          <tr>
+            <td>SoVITS 权重</td>
+            <td><code>SoVITS_weights_v2ProPlus\talkflower_zh_v2pp_strict_e10_s2120.pth</code></td>
+          </tr>
+          <tr>
+            <td>参考音频</td>
+            <td><code>data\smbw_zh_train\audio\TWzh__TalkFlower_Placement_Stream__Course_051_00.mp3</code></td>
+          </tr>
+          <tr>
+            <td>参考文本</td>
+            <td>只有被选中的人才能得到璀璨的光芒。</td>
+          </tr>
+          <tr>
+            <td>示例输出</td>
+            <td><code>outputs\talkflower_zh_v2pp_strict_ref05100_conservative.wav</code></td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        这里的参考音频不是多余的。GPT-SoVITS 推理时，微调权重提供“这个角色如何说话”的能力，参考音频和参考文本则提供本次发声的条件，包括音色、韵律、音量、口吻和音频内容对齐。历史上第一次 smoke test 曾因为参考音频不足 3 秒失败，后来改用满足 3-10 秒要求的参考音频后，CUDA 推理成功生成测试 wav。
+      </p>
+    </section>
+
+    <section>
+      <h2>阶段 7：验证不只听声音，还要测速度和可部署性</h2>
+      <p>
+        训练完成后，我们验证了三类事情：能不能生成、生成效果是否稳定、推理速度是否适合使用。仓库里保留了推理脚本和测速脚本：
+      </p>
+      <pre><code>.\scripts\infer-talkflower.ps1 `
+  -Text "你好，我是闲聊花花。今天也一起开心地冒险吧。" `
+  -Output ".\outputs\talkflower_latest.wav" `
+  -Device cuda
+
+.\scripts\benchmark-talkflower.ps1 -Warmup 1 -Runs 3</code></pre>
+      <p>
+        当前机器实测结果如下：
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>设备</th>
+            <th>平均耗时</th>
+            <th>平均生成音频时长</th>
+            <th>平均 RTF</th>
+            <th>结论</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>NVIDIA GeForce RTX 4070 / CUDA</td>
+            <td>2.717 秒</td>
+            <td>5.120 秒</td>
+            <td>0.531</td>
+            <td>快于实时播放</td>
+          </tr>
+          <tr>
+            <td>CPU</td>
+            <td>5.979 秒</td>
+            <td>5.000 秒</td>
+            <td>1.196</td>
+            <td>慢于实时播放</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        RTF 是 <code>推理耗时 / 音频时长</code>，小于 1 表示生成速度快于播放速度。这个结果说明，如果要构建 API service，应该让模型常驻 GPU，启动时加载 BERT、CNHuBERT、GPT 和 SoVITS，启动后先预热一次；不要每个请求重新启动 Python 或重新加载权重。
+      </p>
+    </section>
+
+    <section>
+      <h2>最终固化：把探索变成可复用脚本</h2>
+      <p>
+        探索结束后，最重要的不是只留下一个 wav，而是把每一步变成未来可以重跑的脚本：
+      </p>
+      <div class="timeline">
+        <article class="step">
+          <h3>01 数据准备</h3>
+          <p><code>scripts\stage-01-prepare-data.ps1</code> 解压中文语音、ASR 标注、生成 clean/strict list 和 dropped 报告。</p>
+        </article>
+        <article class="step">
+          <h3>02 格式化训练集</h3>
+          <p><code>scripts\stage-02-format-dataset.ps1</code> 生成文本、HuBERT、32 kHz wav、语义 token 和 v2ProPlus 需要的中间文件。</p>
+        </article>
+        <article class="step">
+          <h3>03 训练 SoVITS</h3>
+          <p><code>scripts\stage-03-train-sovits.ps1</code> 训练声学/声码器侧权重，输出到 <code>SoVITS_weights_v2ProPlus</code>。</p>
+        </article>
+        <article class="step">
+          <h3>04 训练 GPT</h3>
+          <p><code>scripts\stage-04-train-gpt.ps1</code> 训练文本到语义 token 生成能力，输出到 <code>GPT_weights_v2ProPlus</code>。</p>
+        </article>
+        <article class="step">
+          <h3>05 测试模型</h3>
+          <p><code>scripts\stage-05-test-model.ps1</code> 用固定参考音频和固定文本生成 wav，便于跨实验对比。</p>
+        </article>
+      </div>
+      <p>
+        如果要完整重跑，可以使用：
+      </p>
+      <pre><code>.\scripts\train-all.ps1 `
+  -ZipPath "C:\Users\richard\Downloads\smbw_voice.zip" `
+  -ExpName "talkflower_zh_v2pp_strict" `
+  -GpuNumbers "0"</code></pre>
+      <p>
+        如果已有数据和中间特征，只想继续训练，则可以跳过前两步：
+      </p>
+      <pre><code>.\scripts\train-all.ps1 `
+  -ExpName "talkflower_zh_v2pp_strict" `
+  -GpuNumbers "0" `
+  -SkipData `
+  -SkipFormat</code></pre>
+    </section>
+
+    <section>
+      <h2>这次探索得到的经验</h2>
+      <ol>
+        <li><strong>先跑通，再追求像。</strong> v1 的价值是验证流程，而不是最终质量。</li>
+        <li><strong>碎片化语音必须审计。</strong> 样本数量多不代表有效信息多，过短语气词会稀释音色学习。</li>
+        <li><strong>清理规则要能回溯。</strong> clean 和 strict 分层保留了实验对比空间，也让每条丢弃规则有据可查。</li>
+        <li><strong>固定参考音频和测试句。</strong> 只有控制变量，才能判断 v1、v2ProPlus clean、v2pp strict 哪个真的更好。</li>
+        <li><strong>验证包括速度。</strong> 对 TTS 来说，能生成 wav 只是第一步；RTF、冷启动、模型常驻方式决定它能不能服务化。</li>
+      </ol>
+      <p>
+        最终，<code>talkflower_zh_v2pp_strict</code> 成为当前默认版本。它不是一次命令训练出来的，而是经历了 v1 跑通、问题试听、数据审计、clean 清洗、v2ProPlus 迁移、strict 收紧和推理测速之后，逐步收敛出来的工程结果。
+      </p>
+    </section>
+
+    <section>
+      <h2>模型和数据记录</h2>
+      <p>
+        训练后的模型文件和原始训练数据已经记录在 ModelScope：
+        <a href="https://www.modelscope.cn/models/richarddzh/talking-flower-voice">https://www.modelscope.cn/models/richarddzh/talking-flower-voice</a>
+      </p>
+      <p>
+        仓库内相关文档包括 <code>docs\TRAINING.md</code>、<code>docs\USAGE.md</code>、<code>docs\PRINCIPLES.md</code>、<code>docs\DEPENDENCIES.md</code> 和 <code>docs\ASSETS.md</code>。如果从零 clone，需要先按资产说明恢复模型、原始数据和推理依赖，再运行检查脚本。
+      </p>
+    </section>
+
+    <p class="footer">
+      本文根据 talking-flower-voice 仓库文档、脚本、测速结果和历史训练会话整理。
+    </p>
+  </main>
+</body>
+</html>

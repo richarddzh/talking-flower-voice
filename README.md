@@ -8,6 +8,12 @@
 
 当前可工作的最新版模型为 `talkflower_zh_v2pp_strict`，基于 GPT-SoVITS v2ProPlus 训练。
 
+已手动上传训练后的模型文件和原始训练数据（mp3 zip）到 ModelScope：
+
+```text
+https://www.modelscope.cn/models/richarddzh/talking-flower-voice
+```
+
 默认推理使用：
 
 | 类型 | 路径 |
@@ -73,10 +79,11 @@ Set-ExecutionPolicy -Scope Process Bypass
 
 - [使用说明](docs\USAGE.md)
 - [训练流程](docs\TRAINING.md)
+- [训练探索博客：从 v1 到 v2pp strict](docs\training-journey-blog.html)
 - [训练与推理原理简述](docs\PRINCIPLES.md)
 - [训练和推理依赖差异](docs\DEPENDENCIES.md)
 - [训练/推理资产说明](docs\ASSETS.md)
-- [上传到 ModelScope](docs\MODELSCOPE.md)
+- [ModelScope 发布记录](docs\MODELSCOPE.md)
 - [第三方来源与本仓库修改方式](docs\THIRD_PARTY_SOURCES.md)
 
 ## 数据和产物目录

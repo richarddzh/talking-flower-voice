@@ -1,6 +1,12 @@
-# 上传到 ModelScope
+# ModelScope 发布记录
 
-你确认拥有相关语音素材和模型权重的分发权限后，可以使用本仓库脚本生成 ModelScope 发布包并上传。
+当前已手动上传训练后的模型文件和原始训练数据（mp3 zip）到 ModelScope：
+
+```text
+https://www.modelscope.cn/models/richarddzh/talking-flower-voice
+```
+
+后续如需重新生成或更新 ModelScope 发布包，在确认拥有相关语音素材和模型权重的分发权限后，可以使用本仓库脚本生成发布包并上传。
 
 ## 1. 生成本地发布包
 
