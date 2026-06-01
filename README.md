@@ -14,6 +14,14 @@
 https://www.modelscope.cn/models/richarddzh/talking-flower-voice
 ```
 
+原始训练语音数据来源记录：
+
+| 项目 | 来源 |
+| --- | --- |
+| B站视频 | `https://www.bilibili.com/video/BV1jH4y127Lz/` |
+| 原始 mp3 zip | `https://splatack-r2.qwp.moe/nintendo/smbw_voice.zip` |
+| 提供者 | B站用户 Splatack |
+
 默认推理使用：
 
 | 类型 | 路径 |

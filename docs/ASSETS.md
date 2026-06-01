@@ -13,6 +13,16 @@
 https://www.modelscope.cn/models/richarddzh/talking-flower-voice
 ```
 
+## 原始训练数据来源
+
+本项目使用的 `smbw_voice.zip` 来源记录如下：
+
+| 项目 | 来源 |
+| --- | --- |
+| B站视频 | `https://www.bilibili.com/video/BV1jH4y127Lz/` |
+| 原始 mp3 zip | `https://splatack-r2.qwp.moe/nintendo/smbw_voice.zip` |
+| 提供者 | B站用户 Splatack |
+
 ## clone 后如何恢复到可运行状态
 
 ### 1. 安装环境

@@ -2,6 +2,14 @@
 
 这套流程以闲聊花花中文语音包为例，但设计目标是通用的：把分散、短句、来源结构不完全统一的中文语音素材整理成 GPT-SoVITS 可训练数据，并固化为可重复执行的阶段脚本。
 
+本项目默认使用的原始语音压缩包为 `smbw_voice.zip`，来源记录：
+
+| 项目 | 来源 |
+| --- | --- |
+| B站视频 | `https://www.bilibili.com/video/BV1jH4y127Lz/` |
+| 原始 mp3 zip | `https://splatack-r2.qwp.moe/nintendo/smbw_voice.zip` |
+| 提供者 | B站用户 Splatack |
+
 ## 阶段总览
 
 | 阶段 | 脚本 | 作用 |

@@ -14,6 +14,7 @@
 | `GPT_SoVITS\BigVGAN` | BigVGAN 相关代码，随 GPT-SoVITS 依赖引入 |
 | `tools\AP_BWE_main` | AP-BWE 相关代码，随 GPT-SoVITS 依赖引入 |
 | `tools\asr`、`tools\uvr5` 等 | GPT-SoVITS 工具链相关代码 |
+| `data\smbw_voice_raw`、`data\smbw_zh_train` | 原始训练语音来自 B站用户 Splatack 提供的 `smbw_voice.zip`，来源视频：`https://www.bilibili.com/video/BV1jH4y127Lz/`，zip：`https://splatack-r2.qwp.moe/nintendo/smbw_voice.zip` |
 
 第三方许可证文件保留在对应目录；顶层 `LICENSE` 和第三方目录下的 license 文件应随源码一起保留。
 
