@@ -14,6 +14,8 @@
 https://www.modelscope.cn/models/richarddzh/talking-flower-voice
 ```
 
+仓库同时提供 Hugging Face Model repo 与 CPU Basic Space 的打包、上传和部署脚本，详见 [Hugging Face 发布说明](docs\HUGGINGFACE.md)。
+
 原始训练语音数据来源记录：
 
 | 项目 | 来源 |
@@ -92,6 +94,7 @@ Set-ExecutionPolicy -Scope Process Bypass
 - [训练和推理依赖差异](docs\DEPENDENCIES.md)
 - [训练/推理资产说明](docs\ASSETS.md)
 - [ModelScope 发布记录](docs\MODELSCOPE.md)
+- [Hugging Face 模型与 CPU Space 发布](docs\HUGGINGFACE.md)
 - [第三方来源与本仓库修改方式](docs\THIRD_PARTY_SOURCES.md)
 
 ## 数据和产物目录
